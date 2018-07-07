@@ -2,7 +2,8 @@ pragma solidity ^0.4.7;
 
 /// @title A simple bike insurance contract
 /// @author QVDev
-/// @dev deployed at https://ropsten.etherscan.io/address/0xaa93fe5d043417d15aa2f322bdeac6d1c2f65f0a
+/// @dev Deployed at 0xaB7982B7F13aFcC136cf4E16650934129EB2942A Ropsten Test Net
+/// @dev frontend is at https://plastic-switch.glitch.me/
 contract BikeInsurance {
 
     struct Bike {
@@ -19,6 +20,8 @@ contract BikeInsurance {
     }
 
     mapping(uint => Insurance) insurances;
+    uint[] public insuredBikes;
+    
     uint _minimumAge = 18;
     
     /// @dev Check if bike and customer are legible for insurance
@@ -36,6 +39,7 @@ contract BikeInsurance {
         Insurance memory newInsurance = Insurance(msg.sender, bike, customer);
         
         insurances[_serialnumber] = newInsurance;
+        insuredBikes.push(_serialnumber);
     }
     
     /// @dev make sure that it is the owner of the bike insurance
@@ -49,8 +53,12 @@ contract BikeInsurance {
         delete insurances[_serialnumber];
     }
     
-    /// @dev Check if the customer is eligible to get a insurance for the bike
-    function checkIfEligible(uint _age, uint _serialnumber) external view eligible(_age, _serialnumber) returns(bool) {
-        return true;   
+    /// @dev total count of insured bikes
+    function totalRegisteredBikes() public view returns(uint) {
+        return insuredBikes.length;
+    }
+    
+    function registeredBikes() public view returns(uint[]) {
+        return insuredBikes;
     }
 }
